@@ -38,13 +38,55 @@ public class Lab {
 
     public void createSong(Song song)  {
         //write jdbc code here
+        try {
+            // Retrieve active connection to the database
+            Connection connection = ConnectionUtil.getConnection();
+    
+            // SQL statement to insert a new song
+            String sql = "INSERT INTO songs (title, artist) VALUES ('" + song.gettitle() + "', '" + song.getArtist() + "')";
+
+            // Create Statement object
+            Statement statement = connection.createStatement();
+    
+            // Execute the statement to insert the song into the database
+            statement.executeUpdate(sql);
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Song> getAllSongs(){
         List<Song> songs = new ArrayList<>();
 
         //write jdbc code here
-
+        try {
+            // Retrieve active connection to the database
+            Connection connection = ConnectionUtil.getConnection();
+    
+            // SQL query to retrieve all songs
+            String sql = "SELECT * FROM songs";
+    
+            // Create Statement object
+            Statement statement = connection.createStatement();
+    
+            // Execute the query and retrieve result set
+            ResultSet rs = statement.executeQuery(sql);
+    
+            // Iterate through the result set and populate the songs list
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String artist = rs.getString("artist");
+    
+                Song song = new Song(id, title, artist);
+                songs.add(song);
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
         return songs;
     }
 }
